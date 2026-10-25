@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f6f7f4">
+  <meta name="description" content="CaptiDict gives small businesses a private, local cash-flow workspace.">
+  <title>CaptiDict — Private cash-flow clarity</title>
+  <link rel="stylesheet" href="styles.css">
+
+<style>
+/* CaptiDict Projects page — aligned with the existing mint/glass dashboard */
+#projects .projects-panel,
+#projects .panel,
+.projects-page .panel {
+  background: linear-gradient(135deg, rgba(255,255,255,.88), rgba(236,250,242,.74));
+  border: 1px solid rgba(255,255,255,.9);
+  border-radius: 22px;
+  box-shadow: 0 14px 36px rgba(35,88,67,.08), inset 0 1px 0 rgba(255,255,255,.8);
+  padding: 24px;
+}
+#projects h1, #projects h2, #projects h3 { color: #20372d; letter-spacing: -.035em; }
+#projects .project-create-form {
+  display: grid; grid-template-columns: 170px minmax(220px, 1fr);
+  align-items: end; gap: 14px; margin: 22px 0 18px;
+  padding: 18px; border-radius: 16px; background: rgba(255,255,255,.55);
+  border: 1px solid rgba(255,255,255,.85);
+}
+#projects label { display: grid; gap: 8px; color: #43594e; font-size: 13px; font-weight: 650; }
+#projects input, #projects textarea, #projects select {
+  width: 100%; min-width: 0; box-sizing: border-box; border: 1px solid #dce9e1;
+  border-radius: 11px; background: rgba(255,255,255,.88); color: #20372d;
+  padding: 12px 13px; font: inherit; outline: none; transition: border-color .18s, box-shadow .18s;
+}
+#projects input:focus, #projects textarea:focus, #projects select:focus {
+  border-color: #45a980; box-shadow: 0 0 0 3px rgba(69,169,128,.13);
+}
+#projects textarea { min-height: 44px; resize: vertical; }\n#projects .project-create-form button, #projects .project-create-form #project-form-message { grid-column: 1 / -1; }
+#projects button, #projects .button {
+  border-radius: 12px; font-weight: 700; cursor: pointer; min-height: 42px;
+}
+#projects .button-primary, #projects button[type=submit] {
+  border: 1px solid #18885d; color: white; padding: 11px 17px;
+  background: linear-gradient(135deg,#27a873,#11825a); box-shadow: 0 7px 16px rgba(20,130,90,.17);
+}
+#projects .button-quiet { background: rgba(255,255,255,.72); border: 1px solid #e0ece5; color: #496156; padding: 9px 13px; }
+#projects .table-wrap { overflow-x: auto; border-radius: 15px; border: 1px solid rgba(221,237,228,.8); background: rgba(255,255,255,.45); }
+#projects table { width: 100%; border-collapse: collapse; }
+#projects th { color: #52685d; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; background: rgba(238,248,242,.72); }
+#projects th, #projects td { padding: 15px 13px; text-align: left; border-bottom: 1px solid rgba(217,233,224,.8); }
+#projects tbody tr:last-child td { border-bottom: 0; }
+#projects .status-pill { display: inline-flex; align-items: center; border-radius: 99px; padding: 5px 10px; background: #e0f5e9; color: #18734f; font-size: 12px; font-weight: 700; }
+#projects .project-message { border-radius: 12px; padding: 12px 14px; color: #486156; background: rgba(235,248,239,.72); margin: 12px 0; }
+@media (max-width: 850px) {
+ #projects .project-create-form { grid-template-columns: 1fr; }
+ #projects .projects-panel, #projects .panel, .projects-page .panel { padding: 16px; }
+}
+
+    .forecast-range-control { display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
+    .chart-period-select { max-width:150px; border:1px solid var(--line, #e2e8e3); border-radius:10px; padding:8px 10px; color:var(--ink, #24352b); background:var(--surface, #fff); font:inherit; font-size:12px; font-weight:650; cursor:pointer; }
+    .chart-period { font-size:11px; color:var(--muted, #7a887e); white-space:nowrap; }
+    @media (max-width:560px) { .forecast-range-control { align-items:flex-start; } .chart-period-select { max-width:130px; } }
+
+</style>
+
+
+<style id="capti-health-row-layout-fix">
+.overview-health .health-row { display:grid; grid-template-columns:28px minmax(0,1fr) minmax(64px,auto); align-items:center; gap:10px; width:100%; box-sizing:border-box; }
+.overview-health .health-row > * { min-width:0; }
+.overview-health .health-row .health-row-value { justify-self:end; min-width:0; max-width:100%; white-space:normal; overflow-wrap:anywhere; text-align:right; font-variant-numeric:tabular-nums; }
+@media (max-width:600px) { .overview-health .health-row { grid-template-columns:24px minmax(0,1fr) minmax(54px,auto); gap:7px; } }
+</style>
+<style id="captidict-tour-styles">
+#captidict-tour[hidden]{display:none!important}#captidict-tour{position:fixed;z-index:10000;right:22px;bottom:22px;width:min(390px,calc(100vw - 32px));box-sizing:border-box;padding:22px;border:1px solid #cce8d7;border-radius:20px;background:#fff;box-shadow:0 22px 80px rgba(15,54,35,.27);color:#20372d;font-family:inherit}
+#captidict-tour .tour-eyebrow{font-size:11px;font-weight:800;letter-spacing:.1em;color:#168052}#captidict-tour h2{font-size:22px;margin:9px 0}#captidict-tour p{font-size:14px;line-height:1.55;color:#50665a;margin:0 0 19px}#captidict-tour .tour-actions{display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap}#captidict-tour button{cursor:pointer;border-radius:10px;padding:10px 13px;border:1px solid #d4e5da;background:#f5faf6;color:#246343;font:inherit;font-size:13px;font-weight:750}#captidict-tour button:last-child{background:#19865b;color:#fff;border-color:#19865b}#captidict-tour button:disabled{opacity:.35;cursor:not-allowed}.captidict-tour-target{outline:3px solid #24a873!important;outline-offset:5px;position:relative;z-index:2;box-shadow:0 0 0 9px rgba(36,168,115,.12)!important}@media(max-width:600px){#captidict-tour{right:12px;bottom:12px;padding:17px}}
+</style>
+<style id="captidict-profile-privacy-styles">
+.profile-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+.profile-settings-card{min-width:0;padding:24px!important;border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(236,250,242,.75));border:1px solid rgba(255,255,255,.92);box-shadow:0 14px 36px rgba(35,88,67,.08)}
+.profile-settings-card h2{margin:8px 0;color:#20372d;letter-spacing:-.035em}
+.profile-settings-intro{color:#63766a;font-size:14px;line-height:1.55;margin:0 0 20px}
+.profile-identity-row{display:flex;gap:14px;align-items:center;padding:17px;border:1px solid #e0eee5;border-radius:15px;background:rgba(255,255,255,.7);margin-bottom:14px;min-width:0}
+.profile-settings-avatar{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border-radius:15px;background:linear-gradient(140deg,#1b7d55,#63b17a);color:#fff;font-weight:800;font-size:19px}
+.profile-identity-row strong{display:block;color:#20372d;overflow-wrap:anywhere}.profile-identity-row p{margin:4px 0 0;color:#6a7b70;font-size:13px;overflow-wrap:anywhere}
+.profile-detail-row{display:flex;justify-content:space-between;gap:14px;padding:13px 2px;border-bottom:1px solid #e5eee7;font-size:13px}.profile-detail-row span{color:#64766a}.profile-detail-row strong{color:#263c2f;text-align:right;overflow-wrap:anywhere;max-width:60%}
+.profile-settings-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.profile-security-note{padding:16px;border:1px solid #eadfbe;border-radius:14px;background:#fffaf0;color:#65573a}.profile-security-note p{font-size:13px;line-height:1.55;margin:8px 0}.profile-security-note small{display:block;line-height:1.5;color:#76684c}
+.profile-settings-message{font-size:13px;color:#456b52;line-height:1.5}
+.privacy-detail-item{display:flex;align-items:flex-start;gap:12px;padding:15px 0;border-bottom:1px solid #e5eee7}.privacy-detail-item:last-of-type{border-bottom:0}.privacy-detail-icon{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border-radius:11px;background:#e6f5eb;color:#23764f;font-weight:800}.privacy-detail-item strong{display:block;color:#2b4033;font-size:14px}.privacy-detail-item p{margin:5px 0 0;color:#64766a;font-size:13px;line-height:1.55}
+@media(max-width:850px){.profile-settings-grid{grid-template-columns:minmax(0,1fr)}.profile-settings-card{padding:17px!important}}
+</style>
+
+<style id="captidict-profile-layout-fixes">
+/* Keep sidebar content inside the available viewport and avoid clipping on short screens. */
+.sidebar{box-sizing:border-box;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.sidebar .nav-links{min-width:0}
+.sidebar .nav-link{min-width:0;overflow-wrap:anywhere}
+.profile-settings-card{min-width:0;overflow-wrap:anywhere}
+.profile-help-card .profile-settings-actions{align-items:flex-start}
+@media(max-width:700px){
+  .sidebar{max-height:100dvh;padding-bottom:12px}
+  .sidebar .sidebar-bottom .privacy-card,
+  .sidebar .sidebar-bottom .profile-guide-link{display:none!important}
+  .profile-settings-grid{grid-template-columns:minmax(0,1fr)!important}
+  .profile-settings-card{padding:18px!important}
+}
+@media(max-height:760px){
+  .sidebar .sidebar-bottom .privacy-card{display:none!important}
+  .sidebar{overflow-y:auto}
+}
+
+.profile-password-form{display:grid;gap:9px;margin-top:14px;min-width:0}
+.profile-password-form label{font-size:13px;font-weight:700;color:#43594e;margin-top:5px}
+.profile-password-form input{box-sizing:border-box;width:100%;min-width:0;border:1px solid #dce9e1;border-radius:11px;background:rgba(255,255,255,.9);color:#20372d;padding:12px 13px;font:inherit;outline:none}
+.profile-password-form input:focus{border-color:#45a980;box-shadow:0 0 0 3px rgba(69,169,128,.13)}
+.profile-password-form small{font-size:12px;line-height:1.5;color:#6a7b70}
+.profile-password-form .profile-settings-actions{margin-top:8px}
+.profile-password-form button:disabled{opacity:.6;cursor:wait}
+.profile-settings-message[data-kind="error"]{color:#a33232}
+.profile-settings-message[data-kind="success"]{color:#23764f}
+</style>
+
+
+<style id="captidict-muted-text-size-adjustment">
+/* Supporting and muted text: increase existing small text sizes by 2px without changing colors. */
+.login-story > p,
+.intro,
+.runway-summary p,
+.overview-privacy-strip { font-size: 16px; } /* existing 14px text */
+.login-feature small,
+.login-copy,
+.login-security small,
+.login-foot,
+.business-text small,
+.sidebar .privacy-card p,
+.sidebar .profile > span small,
+.eyebrow,
+.metric-foot,
+.foot-muted,
+.bridge-note,
+.chart-legend,
+.chart-xlabels,
+.table-subtitle,
+.transaction-foot,
+.profile-identity-row p,
+.profile-detail-row,
+.profile-security-note p,
+.profile-settings-message,
+.privacy-detail-item p,
+.profile-password-form label,
+#captidict-tour p { font-size: 15px; } /* existing 13px text */
+.profile-password-form small { font-size: 14px; } /* existing 12px text */
+#projects label { font-size: 15px; } /* existing 13px text */
+#projects th { font-size: 13px; } /* existing 11px text */
+#projects .status-pill { font-size: 14px; } /* existing 12px text */
+#captidict-tour .tour-eyebrow { font-size: 13px; } /* existing 11px text */
+#captidict-tour button { font-size: 15px; } /* existing 13px text */
+.profile-settings-intro { font-size: 16px; } /* existing 14px text */
+.profile-security-note { font-size: 15px; }
+</style>
+
+
+<style>
+/* Keep the sidebar footer focused on a prominent logout action. */
+.profile.profile-logout-only {
+  display: block !important;
+  padding: 12px 0 0 !important;
+}
+.profile.profile-logout-only .logout-button {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100% !important;
+  min-height: 48px !important;
+  padding: 13px 20px !important;
+  font-size: 16px !important;
+  font-weight: 750 !important;
+  border-radius: 13px !important;
+}
+</style>
+
+
+<style id="captidict-transaction-delete-styles">
+  .transaction-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .table-action-delete { color: #b42318; border-color: rgba(180, 35, 24, .28); }
+  .table-action-delete:hover { background: rgba(180, 35, 24, .08); }
+  .table-action-delete:disabled { opacity: .55; cursor: wait; }
+</style>
+
+<style id="captidict-profile-redesign">
+/* Profile & settings: clean, aligned card layout */
+#profile { min-width:0; }
+#profile .profile-redesign-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; align-items:stretch; }
+#profile .profile-settings-card { box-sizing:border-box; min-width:0; padding:24px!important; border:1px solid #dcefe7; border-radius:16px; background:rgba(255,255,255,.88); box-shadow:0 8px 26px rgba(26,94,67,.045); }
+#profile .profile-card-heading { display:flex; align-items:center; gap:14px; margin-bottom:22px; }
+#profile .profile-heading-icon { display:grid; place-items:center; flex:0 0 48px; width:48px; height:48px; border-radius:50%; background:#dcf7eb; color:#138258; font-size:25px; font-weight:800; }
+#profile .profile-card-heading h2 { margin:0 0 4px; color:#12352e; font-size:20px; line-height:1.25; letter-spacing:-.025em; }
+#profile .profile-card-heading .profile-settings-intro { margin:0; font-size:14px; line-height:1.45; color:#657b8a; }
+#profile .profile-field-group { display:grid; gap:8px; margin:0 0 20px; min-width:0; }
+#profile .profile-field-group label { font-size:13px; font-weight:750; color:#17352f; }
+#profile .profile-readonly-field { box-sizing:border-box; min-width:0; min-height:40px; display:flex; align-items:center; padding:9px 13px; border:1px solid #dce7eb; border-radius:9px; background:#f8fafb; color:#334b60; font-size:14px; overflow-wrap:anywhere; }
+#profile .profile-workspace-row { display:flex; align-items:center; gap:13px; padding-top:17px; margin-top:2px; border-top:1px solid #e5efec; }
+#profile .profile-workspace-avatar { display:grid; place-items:center; flex:0 0 44px; width:44px; height:44px; border-radius:50%; background:#f5e9db; color:#875b39; font-size:20px; font-weight:800; }
+#profile .profile-workspace-row strong, #profile .profile-workspace-row span, #profile .profile-workspace-row small { display:block; }
+#profile .profile-workspace-row strong { font-size:13px; color:#17352f; margin-bottom:4px; }
+#profile .profile-workspace-row div > span { font-size:13px; color:#71869a; }
+#profile .profile-account-session { margin-top:4px; color:#82939e; font-size:11px; overflow-wrap:anywhere; }
+#profile .profile-account-card .profile-settings-actions { margin-top:22px; }
+#profile .profile-password-form { gap:9px; margin-top:0; }
+#profile .profile-password-form label { margin-top:2px; color:#17352f; font-size:13px; }
+#profile .profile-password-form input { min-height:40px; padding:10px 13px; border-radius:9px; border-color:#dce7eb; background:#fff; font-size:14px; }
+#profile .profile-password-form input::placeholder { color:#8b9aab; }
+#profile .profile-password-form small { order:0; margin-top:-1px; font-size:12px; color:#738797; }
+#profile .profile-password-form .profile-settings-actions { margin-top:10px; }
+#profile .profile-settings-actions { gap:10px; align-items:center; }
+#profile .profile-help-wide-card { grid-column:1 / -1; }
+#profile .profile-help-heading { padding-bottom:18px; margin-bottom:0; border-bottom:1px solid #e7f0ed; }
+#profile .profile-help-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+#profile .profile-help-option { display:flex; align-items:center; gap:13px; min-width:0; padding:20px 5px 2px; }
+#profile .profile-help-option + .profile-help-option { border-left:1px solid #e1ece8; padding-left:28px; margin-left:20px; }
+#profile .profile-help-option-icon { display:grid; place-items:center; flex:0 0 38px; width:38px; height:38px; border-radius:11px; background:#e0f7ed; color:#16845c; font-size:21px; }
+#profile .profile-help-option-copy { min-width:0; flex:1; }
+#profile .profile-help-option-copy strong { display:block; margin-bottom:5px; color:#17352f; font-size:13px; }
+#profile .profile-help-option-copy span { display:block; color:#71869a; font-size:12px; line-height:1.45; }
+#profile .profile-help-option .button { flex-shrink:0; white-space:nowrap; }
+@media(max-width:1050px) {
+  #profile .profile-redesign-grid { grid-template-columns:minmax(0,1fr); }
+  #profile .profile-help-wide-card { grid-column:auto; }
+}
+@media(max-width:650px) {
+  #profile .profile-settings-card { padding:18px!important; }
+  #profile .profile-help-options { grid-template-columns:minmax(0,1fr); }
+  #profile .profile-help-option { flex-wrap:wrap; padding:16px 0; }
+  #profile .profile-help-option + .profile-help-option { margin:0; padding-left:0; border-left:0; border-top:1px solid #e1ece8; }
+  #profile .profile-help-option .button { margin-left:51px; }
+  #profile .profile-account-session { display:none; }
+}
+</style>
+
+
+  <style id="profile-avatar-centering-fix">
+    /* Keep the workspace initial centered inside its circular avatar. */
+    #profile .profile-workspace-row .profile-workspace-avatar {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 44px;
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      padding: 0;
+      box-sizing: border-box;
+      line-height: 1;
+      text-align: center;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+  </style>
+
+</head>
+<body>
+  <section class="login-screen" id="login-screen">
+    <div class="login-brand"><a class="brand" href="#" aria-label="CaptiDict"><span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 22.5 13.3 15l4.6 4.5L26 10"/><path d="M18.7 10H26v7.2"/></svg></span><span class="brand-name">CaptiDict<span>.</span></span></a><span class="login-local-badge"><i></i> PRIVATE BY DESIGN</span></div>
+    <div class="login-content">
+      <div class="login-story">
+        <span class="login-kicker">CASH FLOW, WITH CLARITY</span>
+        <h1>Feel ready for<br><em>what comes next.</em></h1>
+        <p>One calm view of your cash, upcoming commitments, and the choices that can give you more room.</p>
+        <div class="login-feature"><span>✓</span><div><strong>Forecast with context</strong><small>Receipts, confidence, and committed payments in one place.</small></div></div>
+        <div class="login-feature"><span>✓</span><div><strong>Keep your workspace local</strong><small>This demo does not send financial data to an AI service or server.</small></div></div>
+      </div>
+      <article class="login-card">
+        <span class="login-card-icon">↗</span>
+        <p class="panel-kicker">MITTI &amp; LOOM WORKSPACE</p>
+        <h2>Welcome back</h2>
+        <p class="login-copy">Open the private demo workspace on this device.</p>
+        
+<form id="login-form">
+  <label for="auth-name" id="auth-name-label" hidden>Full name</label>
+  <input
+    id="auth-name"
+    name="name"
+    type="text"
+    placeholder="Full name"
+    minlength="2"
+    maxlength="80"
+    autocomplete="name"
+    hidden
+  >
+
+  <label for="auth-email">Email address</label>
+  <input
+    id="auth-email"
+    name="email"
+    type="email"
+    placeholder="you@example.com"
+    autocomplete="email"
+    required
+  >
+
+  <label for="auth-password">Password</label>
+  <input
+    id="auth-password"
+    name="password"
+    type="password"
+    placeholder="Enter your password"
+    minlength="10"
+    maxlength="72"
+    autocomplete="current-password"
+    required
+  >
+
+  <p id="auth-message" role="alert" aria-live="polite"></p>
+
+  <button class="button button-primary login-submit" type="submit" id="auth-submit">
+    Log in <span>→</span>
+  </button>
+  <button type="button" id="auth-toggle">
+    Need an account? Register
+  </button>
+</form>
+<div class="login-divider"><span></span><small>SECURE ACCOUNT ACCESS</small><span></span></div>
+<div class="login-security">
+  <span class="security-icon">⌑</span>
+  <span>
+    <strong>Protected account access</strong>
+    <small>Sign in to access your workspace.</small>
+  </span>
+</div>
+
+        <div class="login-foot"><span class="status-dot green-dot"></span>Data stays in this browser's local storage</div>
+      </article>
+    </div>
+    <div class="login-bottom"><span>CaptiDict · Cash-flow clarity for small businesses</span><span>Fictional demo workspace · India</span></div>
+  </section>
+
+  <div class="app-shell" id="app-shell" hidden>
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#overview" aria-label="CaptiDict home"><span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 22.5 13.3 15l4.6 4.5L26 10"/><path d="M18.7 10H26v7.2"/></svg></span><span class="brand-name">CaptiDict<span>.</span></span></a>
+      <div class="workspace-label">WORKSPACE</div>
+      <div class="business-card"><span class="business-avatar">M</span><span class="business-text"><strong>Mitti &amp; Loom</strong><small>Business workspace</small></span><span class="chevron">⌄</span></div>
+      <nav class="nav-links">
+        <a class="nav-link active" href="#overview" data-page-link="overview"><span class="nav-icon">▦</span>Overview</a>
+        <a class="nav-link" href="#forecast" data-page-link="forecast"><span class="nav-icon">⌁</span>Forecast</a>
+        <a class="nav-link" href="#transactions" data-page-link="transactions"><span class="nav-icon">⇄</span>Transactions</a>
+        <a class="nav-link" href="#projects" data-page-link="projects"><span class="nav-icon">▦</span>Projects</a>
+        <a class="nav-link assistant-nav" href="#assistant" data-page-link="assistant"><span class="nav-icon">✦</span>Private AI</a>
+        <a class="nav-link" href="#profile" data-page-link="profile"><span class="nav-icon">◎</span>Profile &amp; settings</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="privacy-card"><span class="privacy-card-icon">⌑</span><strong>Your data stays here</strong><p>Private assistant uses local forecast rules. No financial data is sent to a server.</p><a href="#assistant" data-page-link="assistant">See privacy details <span>→</span></a></div>
+        <div class="profile profile-logout-only"><button class="logout-button" id="logout-btn" type="button">Log out</button></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb"><span>Mitti &amp; Loom</span><span class="crumb-slash">/</span><strong id="page-breadcrumb">Overview</strong></div>
+        <div class="topbar-actions"><div class="topbar-safe-spend" title="Largest withdrawal that keeps 95% of 500 fixed-seed 30-day cash paths at or above the safety reserve. Receipt confidence values are modeled as independent chances and come from this browser."><span class="safe-spend-top-label">SAFE TO SPEND · 30 DAYS</span><strong id="topbar-safe-spend-value">₹—</strong><small>95% modeled · 30-day horizon</small></div><button class="button button-quiet" id="export-btn"><span>↓</span> Export</button><button class="button button-primary" id="add-transaction-btn"><span>＋</span> Add transaction</button><button class="button button-quiet logout-top" id="logout-top-btn" type="button">Sign out</button></div>
+      </header>
+
+      <div class="page-wrap">
+        <section class="page-heading">
+          <div><p class="eyebrow"><span class="live-dot"></span> SATURDAY, 24 OCTOBER 2026 <span class="heading-separator">·</span> SAVED ON THIS DEVICE</p><h1 id="page-heading-title">Your cash, <em>in view.</em></h1><p class="intro" id="page-intro">See what is coming in, what is going out, and where to act before a tight week arrives.</p></div>
+          <button class="period-select" id="reset-btn" type="button"><span class="period-icon">◷</span> Next 30 days <span class="down-caret">⌄</span></button>
+        </section>
+
+        <section class="page-view active" id="overview" data-page-view="overview">
+          <section class="metric-grid" aria-label="Cash-flow summary">
+            <article class="metric-card cash-card"><div class="metric-top"><span>CURRENT CASH</span><span class="metric-icon icon-green">₹</span></div><div class="metric-value" id="metric-cash">₹5,00,000</div><div class="metric-foot"><span class="status-dot green-dot"></span> As of 24 Oct <button class="inline-edit" id="edit-cash-btn" type="button">Edit</button></div></article>
+            <article class="metric-card metric-available"><div class="metric-top"><span>AVAILABLE CASH · 30D</span><span class="metric-icon icon-blue">↗</span></div><div class="metric-value" id="metric-endcash">₹4,64,250</div><div class="metric-foot"><span class="foot-muted">After expected movements</span></div></article>
+            <article class="metric-card metric-net"><div class="metric-top"><span>NET CASH · 30D</span><span class="metric-icon icon-orange">⇄</span></div><div class="metric-value" id="metric-net">−₹35,750</div><div class="metric-foot"><span class="foot-muted">Expected in minus committed out</span></div></article>
+            <article class="metric-card metric-runway"><div class="metric-top"><span>CASH RUNWAY</span><span class="metric-icon icon-blue">◷</span></div><div class="metric-value" id="metric-runway">30+ days</div><div class="metric-foot"><span class="foot-muted" id="metric-runway-note">No shortfall in this view</span></div></article>
+            <article class="metric-card metric-risk"><div class="metric-top"><span>ALERTS</span><span class="metric-icon icon-amber">!</span></div><div class="metric-value" id="metric-alerts">1</div><div class="metric-foot"><span id="metric-health" class="health-label">Watch reserve level</span><span class="foot-separator">·</span><span id="metric-low-date">1 Nov</span></div></article>
+          </section>
+          <section class="overview-grid">
+            <article class="panel cash-bridge-panel">
+              <div class="cash-bridge-head"><div><div class="panel-kicker">CASH BRIDGE</div><h2>How cash moves over 30 days</h2><p>See how today’s balance becomes available cash.</p></div><span class="bridge-balance" id="bridge-current-cash">₹5,00,000</span></div>
+              <div class="bridge-row current"><span class="bridge-icon">⌂</span><span><strong class="bridge-label">Current cash</strong><small class="bridge-note">Opening balance</small></span><strong class="bridge-amount" id="bridge-opening">₹5,00,000</strong><span class="bridge-arrow">›</span></div>
+              <div class="bridge-row positive"><span class="bridge-icon">↘</span><span><strong class="bridge-label">Expected receipts</strong><small class="bridge-note" id="bridge-receipt-note">Weighted by confidence</small></span><strong class="bridge-amount" id="bridge-in">+₹4,42,250</strong><span class="bridge-arrow">›</span></div>
+              <div class="bridge-row negative"><span class="bridge-icon">↗</span><span><strong class="bridge-label">Committed payments</strong><small class="bridge-note">Counted in full</small></span><strong class="bridge-amount" id="bridge-out">−₹4,78,000</strong><span class="bridge-arrow">›</span></div>
+              <div class="bridge-row negative" id="bridge-surprise-row" hidden><span class="bridge-icon">!</span><span><strong class="bridge-label">Unexpected cost</strong><small class="bridge-note">What-if assumption</small></span><strong class="bridge-amount" id="bridge-surprise">−₹2,00,000</strong><span class="bridge-arrow">›</span></div>
+              <div class="bridge-total"><span>Projected cash at day 30</span><strong id="bridge-ending">₹4,64,250</strong></div>
+            </article>
+            <article class="panel runway-panel">
+              <div class="runway-head"><div><div class="panel-kicker">RUNWAY SCENARIOS</div><h2>Compare what could change</h2><p>See how payment timing shifts your lowest cash point.</p></div><span class="scenario-spark">✦</span></div>
+              <div class="runway-tabs" role="tablist" aria-label="Cash-flow scenarios"><button class="active" type="button" data-overview-scenario="base">Base</button><button type="button" data-overview-scenario="stress">Late customer</button><button type="button" data-overview-scenario="extension">With extension</button></div>
+              <div class="runway-summary"><small id="overview-scenario-label">BASE · LOWEST PROJECTED CASH</small><strong id="overview-scenario-low">₹1,70,250</strong><p id="overview-scenario-date">1 Nov · ₹20,250 above reserve</p></div>
+              <div class="runway-stat"><span>30-day ending cash</span><strong id="overview-ending-cash">₹4,64,250</strong></div>
+              <div class="runway-stat"><span>Safety reserve</span><strong id="overview-safety-reserve">₹—</strong></div>
+              <button class="runway-link" type="button" data-page-link="forecast">Open full forecast and controls →</button>
+            </article>
+          </section>
+          <section class="panel pulse-panel overview-health">
+            <div class="panel-head"><div><div class="panel-kicker">CASH HEALTH</div><h2>At a glance</h2></div><span class="health-ring">✓</span></div>
+            <div class="health-status"><span class="health-ring">✓</span><div><strong id="health-title">On track, with a watch-out</strong><small id="health-subtitle">One week is close to your reserve.</small></div></div>
+            <div class="health-divider"></div>
+            <div class="health-row"><span class="health-row-icon blue-soft">↘</span><span><strong id="health-receipts">4 expected receipts</strong><small>Confidence-weighted · next 30 days</small></span><span class="health-row-value" id="health-receipt-total">₹4.42L</span></div>
+            <div class="health-row"><span class="health-row-icon orange-soft">↗</span><span><strong id="health-payments">4 planned payments</strong><small>Scheduled · next 30 days</small></span><span class="health-row-value" id="health-payment-total">₹4.78L</span></div>
+            <div class="health-row"><span class="health-row-icon purple-soft">◷</span><span><strong>Largest receipt</strong><small id="largest-receipt-name">Aster Retail · 3 Nov</small></span><span class="health-row-value" id="largest-receipt-total">₹1.8L</span></div>
+          </section>
+          <article class="panel upcoming-panel overview-upcoming">
+            <div class="panel-head"><div><div class="panel-kicker">WHAT'S NEXT</div><h2>Next transactions</h2></div><a class="text-link" href="#transactions" data-page-link="transactions">View all <span>→</span></a></div>
+                <div class="table-wrap"><table><thead><tr><th>TRANSACTION</th><th>DATE</th><th>CONFIDENCE</th><th>AMOUNT</th><th></th></tr></thead><tbody id="transaction-rows"></tbody></table></div>
+            <div class="transaction-foot"><span class="foot-dot"></span><span>Fictional demo data. Forecasts are estimates, not guarantees.</span></div>
+          </article>
+          <article class="panel overview-chase-panel">
+            <div class="panel-head"><div><div class="panel-kicker">RECEIVABLES · LOCAL FOLLOW-UP</div><h2>Cash to unlock</h2><p class="table-subtitle">Prioritize customer receipts by confidence-weighted value and expected timing.</p></div><button class="text-link" type="button" data-open-receivables>Open chase list <span>→</span></button></div>
+            <div class="overview-chase-list" id="overview-chase-list"></div>
+            <div class="transaction-foot"><span class="foot-dot"></span><span>Reminder drafts stay on this device. Nothing is sent automatically.</span></div>
+          </article>
+          <div class="overview-privacy-strip"><span class="privacy-shield">⌑</span><span><strong>Private by design.</strong> Your transaction details stay in this browser and are not sent to an AI service.</span><a href="#assistant" data-page-link="assistant">Learn about the assistant →</a></div>
+        </section>
+
+        <section class="page-view" id="forecast" data-page-view="forecast" hidden>
+          <section class="forecast-layout">
+            <article class="panel forecast-panel">
+              <div class="panel-head"><div><div class="panel-kicker" id="forecast-kicker">30-DAY OUTLOOK <span class="tiny-info" title="Forecast receipts are weighted by the confidence shown in each transaction.">i</span></div><h2>Cash balance forecast</h2></div><div class="forecast-range-control"><label class="sr-only" for="forecast-horizon">Forecast period</label><select id="forecast-horizon" class="chart-period-select"><option value="30">30 days</option><option value="90">3 months</option><option value="180">6 months</option><option value="365">1 year</option></select><div class="chart-period" id="forecast-range-label">24 Oct — 23 Nov</div></div></div>
+              <div class="chart-legend"><span><i class="legend-dot legend-actual"></i>Expected balance</span><span id="scenario-legend"><i class="legend-dot legend-scenario"></i>What-if scenario</span><span><i class="legend-line"></i>Safety reserve</span><span id="move-legend" class="move-legend"><i class="legend-dot legend-move"></i>With supplier extension</span></div>
+              <div class="chart-shell" id="chart-shell" role="img" aria-label="Cash balance forecast chart"><svg id="cash-chart" viewBox="0 0 760 260" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+              <div class="chart-xlabels" id="forecast-xlabels"><span>24 Oct</span><span>31 Oct</span><span>7 Nov</span><span>14 Nov</span><span>23 Nov</span></div>
+              <div class="risk-alert" id="risk-alert" role="status"><span class="risk-alert-badge" id="risk-alert-badge">WATCH</span><span><strong id="risk-alert-title">Reserve watch</strong><small id="risk-alert-copy">A forecast estimate, based on the current sample inputs.</small></span></div>
+              <div class="chart-insight" id="chart-insight"><span class="insight-icon">✦</span><span><strong>Breathing room is tight.</strong> Your projected low sits close to your ₹1.5L safety reserve.</span><a href="#scenarios" data-page-link="forecast">Stress-test it <span>→</span></a></div>
+              <div class="forecast-method"><span class="method-icon">i</span><span><strong>How this forecast works</strong> Receipts are multiplied by the confidence shown in each transaction. Scheduled outflows count in full. Items on the same day are netted together.</span></div>
+            </article>
+            <article class="panel scenario-panel" id="scenarios">
+              <div class="scenario-header"><div><div class="panel-kicker">PLAN FOR THE UNEXPECTED</div><h2>What if things shift?</h2></div><span class="scenario-spark">✦</span></div>
+              <p class="scenario-intro">Drag a control to see the forecast, lowest balance, and reserve warning update live.</p>
+              <div class="scenario-preset"><span>Quick scenario</span><button class="preset-button" id="stress-btn" type="button">Customer pays late <span>↗</span></button></div>
+              <section class="what-if-composer" aria-labelledby="what-if-heading">
+                <div class="what-if-heading-row"><div><div class="panel-kicker">NATURAL-LANGUAGE WHAT-IF</div><h3 id="what-if-heading">Describe a change</h3></div><span class="what-if-local"><i></i> LOCAL ONLY</span></div>
+                <p>Use a pending customer name and a simple change. Preview the assumptions before applying them.</p>
+                <form id="what-if-form" class="what-if-form">
+                  <label class="sr-only" for="what-if-input">Describe a cash-flow scenario</label>
+                  <textarea id="what-if-input" rows="2" maxlength="240" placeholder="e.g. Aster pays 20 days late and sales drop 10%" required></textarea>
+                  <button class="button button-primary" type="submit">Preview scenario <span>→</span></button>
+                </form>
+                <div id="what-if-preview" class="what-if-preview" role="status" aria-live="polite" hidden>
+                  <strong id="what-if-preview-title"></strong>
+                  <p id="what-if-preview-copy"></p>
+                  <div class="what-if-preview-actions"><button id="what-if-dismiss" class="button button-quiet" type="button">Edit input</button><button id="what-if-apply" class="button button-primary" type="button">Apply to forecast</button></div>
+                </div>
+                <div id="what-if-applied" class="what-if-applied" role="status" aria-live="polite" hidden><span><strong>Applied locally</strong><small id="what-if-applied-copy"></small></span><button id="what-if-clear" class="button button-quiet" type="button">Clear scenario</button></div>
+                <small class="what-if-privacy">Text stays in this browser. No AI or API request is made; only confirmed scenario settings are saved locally.</small>
+              </section>
+              <div class="control-row"><label for="delay-control">Largest pending receipt arrives late <strong><span id="delay-value">0</span> days</strong></label><input type="range" id="delay-control" min="0" max="14" step="1" value="0"><div class="range-caption"><span>On time</span><span>+14 days</span></div><small class="control-help">Delay applies to the largest pending inflow in the current list.</small></div>
+              <div class="control-row"><label for="expense-control">Unexpected expense <strong>₹<span id="expense-value">0</span></strong></label><input type="range" id="expense-control" min="0" max="250000" step="10000" value="0"><div class="range-caption"><span>None</span><span>₹2.5L</span></div><label class="scenario-date-label" for="expense-date">Assume it happens on <input type="date" id="expense-date" min="2026-10-24" max="2026-11-23" value="2026-11-06"></label></div>
+              <div class="control-row"><label for="sales-control">Sales inflows come in lower <strong><span id="sales-value">0</span>%</strong></label><input type="range" id="sales-control" min="0" max="80" step="5" value="0"><div class="range-caption"><span>As planned</span><span>−80%</span></div><small class="control-help">Applied to pending inflows whose description includes “sales”.</small></div>
+              <div class="scenario-result" id="scenario-result"><span class="result-icon">↗</span><span><small id="scenario-low-label">LOWEST BALANCE IN THIS SCENARIO</small><strong id="scenario-low">₹1,70,250</strong></span><span class="result-date" id="scenario-low-date">1 Nov</span></div>
+              <div class="action-card" id="action-card"><div class="action-top"><span class="action-badge">SUGGESTED MOVE</span><span class="action-tag">What-if</span></div><strong>Ask your supplier for a 14-day extension</strong><p>See whether shifting one payment gives you more room during the tight week.</p><button id="apply-action-btn" type="button">Compare this move <span>→</span></button></div>
+            </article>
+          </section>
+          <section class="panel backtest-panel" aria-labelledby="backtest-heading">
+            <div class="panel-head"><div><div class="panel-kicker">MODEL CHECK · HISTORICAL COVERAGE</div><h2 id="backtest-heading">Forecast backtest</h2><p class="table-subtitle">Check whether past cash balances landed inside the ranges CaptiDict forecast at the time.</p></div><span class="backtest-local-pill"><i></i> LOCAL ONLY</span></div>
+            <div class="backtest-intro"><strong>No accuracy number is assumed.</strong><span>Import historical forecast snapshots and actual closing balances. The demo chart currently shows an expected line, not a prediction band, so this panel evaluates only the lower and upper bounds you provide. It never invents history or an accuracy score.</span></div>
+            <div class="backtest-controls">
+              <label class="file-picker-label" for="backtest-file">↑ Import backtest CSV</label><input id="backtest-file" type="file" accept=".csv,text/csv" aria-label="Import historical forecast backtest CSV">
+              <button class="button button-quiet compact" id="download-backtest-template" type="button">↓ Download CSV template</button>
+              <button class="button button-quiet compact" id="clear-backtest-btn" type="button" disabled>Clear loaded data</button>
+            </div>
+            <div id="backtest-result" class="backtest-result" aria-live="polite"><div class="backtest-empty"><span>i</span><div><strong>Waiting for historical data</strong><p>Use one row per forecast checkpoint: forecast date, target date, lower and upper predicted balance, and actual closing cash. The CSV stays in this browser session.</p></div></div></div>
+            <div class="backtest-method"><strong>For a six-month headline:</strong> provide at least 20 valid observations in the last 180 days, data reaching the start of that window, and a recent forecast snapshot. Use YYYY-MM-DD dates and plain signed INR numbers without thousands separators. Coverage is the share of actual balances between the recorded low and high bounds. Values are evaluated locally, held only in memory, and are not saved.</div>
+          </section>
+          <section class="panel pay-order-panel">
+            <div class="panel-head"><div><div class="panel-kicker">PAYMENT PRIORITY · LOCAL PLANNER</div><h2>Pay-order planner</h2><p class="table-subtitle">When projected cash is below reserve, compare which payments to protect and which dates may be worth discussing.</p></div><span class="pay-order-icon">₹</span></div>
+            <div class="pay-order-intro"><strong>Set your own delay estimates.</strong> The prefilled sample values are fictional; the supplier is marked negotiable only to demonstrate the planner. Replace estimates with verified terms, and mark a bill negotiable only after checking whether its date can be discussed. Unset costs are protected from automatic deferral. The 14-day comparison assumes twice the weekly estimate.</div>
+            <div id="pay-order-planner" aria-live="polite"></div>
+            <p class="action-plan-note">A suggested 14-day change is a what-if comparison, not permission to miss a due date. Confirm agreements and statutory or payroll obligations with the relevant counterparty or your CA.</p>
+          </section>
+          <section class="panel action-plan-panel">
+            <div class="panel-head"><div><div class="panel-kicker">LOCAL ACTION PLANNER</div><h2>Three useful next steps</h2><p class="table-subtitle">Ranked from the current forecast. Mark progress locally as you work through it.</p></div><span class="action-plan-private"><i></i> SAVED ON THIS DEVICE</span></div>
+            <div class="action-plan-list" id="action-plan-list"></div>
+            <p class="action-plan-note">Impact figures are scenario comparisons, not promises. Confirm dates and agreements with the people involved.</p>
+          </section>
+          <section class="panel funding-panel" aria-labelledby="funding-heading">
+            <div class="panel-head"><div><div class="panel-kicker">FUNDING READINESS · LOCAL MODEL</div><h2 id="funding-heading">Cash-flow funding brief</h2><p class="table-subtitle">Estimate an additional reserve buffer from the current forecast, then prepare a report for discussion.</p></div><span class="funding-local-pill"><i></i> LOCAL ONLY</span></div>
+            <div class="funding-metrics">
+              <article class="funding-metric funding-primary"><small>P95 ESTIMATED RESERVE BUFFER</small><strong id="funding-buffer">₹0</strong><span>Indicative extra cash to keep the modeled low at or above your reserve in 95% of simulated paths.</span></article>
+              <article class="funding-metric"><small>FIFTH-PERCENTILE LOW · P05</small><strong id="funding-p05-low">—</strong><span>Modeled low before adding the estimated buffer.</span></article>
+              <article class="funding-metric"><small>EXPECTED-PATH LOW</small><strong id="funding-expected-low">—</strong><span id="funding-expected-low-date">Current 30-day estimate.</span></article>
+              <article class="funding-metric"><small>PATHS ABOVE RESERVE AFTER BUFFER</small><strong id="funding-path-coverage">—</strong><span>Observed across 500 repeatable local paths.</span></article>
+            </div>
+            <div class="funding-scenario-row"><span><strong>Scenario included</strong><small id="funding-scenario">Base case using current forecast inputs</small></span><button class="button button-primary" id="export-funding-brief" type="button">Export PDF brief <span>↓</span></button></div>
+            <div class="funding-disclaimer"><strong>Planning estimate only.</strong> Replace fictional demo values with verified records. This brief is not a loan offer, credit decision, or guarantee; review assumptions with your CA and confirm requirements with a lender.</div>
+          </section>
+        </section>
+
+        <section class="page-view" id="transactions" data-page-view="transactions" hidden>
+          <div class="transaction-subnav" role="tablist" aria-label="Transaction views">
+            <button id="transaction-tab-all" class="active" type="button" role="tab" aria-selected="true" aria-controls="transaction-pane-all" data-transaction-tab="all">All transactions</button>
+            <button id="transaction-tab-receivables" type="button" role="tab" tabindex="-1" aria-selected="false" aria-controls="transaction-pane-receivables" data-transaction-tab="receivables">Receivables <span class="transaction-tab-count" id="receivables-count">0</span></button>
+          </div>
+          <div id="transaction-pane-all" class="transaction-pane" role="tabpanel" aria-labelledby="transaction-tab-all" data-transaction-pane="all">
+            <section class="panel all-transactions-panel">
+              <div class="panel-head"><div><div class="panel-kicker">CASH FLOW INPUTS</div><h2>Transactions</h2><p class="table-subtitle">Review expected receipts and payments that shape the 30-day forecast.</p></div><div class="transaction-toolbar"><button class="button button-quiet compact" id="import-csv-btn" type="button">↑ Import CSV</button><button class="button button-quiet compact" id="add-transaction-bottom" type="button">＋ Add transaction</button></div></div>
+              <div class="table-wrap"><table><thead><tr><th>TRANSACTION</th><th>TYPE</th><th>EXPECTED DATE</th><th>CONFIDENCE</th><th>AMOUNT</th><th>STATUS</th><th></th></tr></thead><tbody id="all-transaction-rows"></tbody></table></div>
+              <div class="transaction-foot transaction-note"><span class="foot-dot"></span><span>Expected receipts use their confidence percentage. Outflows count in full. Mark items received or paid to update current cash.</span></div>
+            </section>
+          </div>
+          <section id="transaction-pane-receivables" class="transaction-pane" role="tabpanel" aria-labelledby="transaction-tab-receivables" data-transaction-pane="receivables" hidden>
+            <div class="chase-layout">
+              <section class="panel chase-list-panel">
+                <div class="panel-head"><div><div class="panel-kicker">CUSTOMER FOLLOW-UPS</div><h2>Smart chase list</h2><p class="table-subtitle">Start with receipts that could unlock the most near-term cash.</p></div><span class="chase-local-pill"><i></i> LOCAL ONLY</span></div>
+                <div class="chase-explainer"><strong>How priority is ranked</strong><span>Score = amount × your receipt-confidence input × timing factor. Timing factor: expected date passed 1.50×; expected in 0–3 days 1.35×; 4–7 days 1.20×; 8–14 days 1.10×; later 1.00×. This is a planning order, not a prediction that a customer will pay late.</span></div>
+                <div id="chase-list" class="chase-list" aria-live="polite"></div>
+                <div class="transaction-foot"><span class="foot-dot"></span><span>Only pending customer receipts appear; projected sales are excluded. Mark a receipt received in All transactions to remove it from follow-ups.</span></div>
+              </section>
+              <section class="panel chase-draft-panel" aria-labelledby="chase-draft-heading">
+                <div class="panel-head"><div><div class="panel-kicker">EDITABLE REMINDER</div><h2 id="chase-draft-heading">Draft a follow-up</h2><p class="table-subtitle" id="chase-selected-label">Choose a receipt from the list.</p></div><span class="chase-draft-icon">✉</span></div>
+                <div class="chase-tone-picker" role="group" aria-label="Reminder tone"><button class="active" type="button" data-chase-tone="friendly" aria-pressed="true">Friendly</button><button type="button" data-chase-tone="firm" aria-pressed="false">Firm</button><button type="button" data-chase-tone="final" aria-pressed="false">Final reminder</button></div>
+                <label class="sr-only" for="chase-draft-text">Editable reminder draft</label>
+                <textarea id="chase-draft-text" class="chase-draft-text" rows="8" placeholder="Choose a pending receipt to create a draft." disabled></textarea>
+                <div class="chase-draft-actions"><button id="chase-copy-btn" class="button button-primary" type="button" disabled>Copy draft <span>↗</span></button><span id="chase-copy-status" role="status" aria-live="polite">Review and edit before using.</span></div>
+                <div class="chase-privacy-note"><span>⌑</span><p><strong>No message is sent.</strong> Drafts are generated with local templates in this browser. Edit, copy, and send through your own channel only after checking the invoice details.</p></div>
+              </section>
+            </div>
+          </section>
+        </section>
+
+        <section class="page-view" id="projects" data-page-view="projects" hidden>
+          <section class="panel all-transactions-panel">
+            <div class="panel-head">
+              <div>
+                <div class="panel-kicker">PROJECT WORKSPACE</div>
+                <h2>Your projects</h2>
+                <p class="table-subtitle">Projects are saved to your PostgreSQL database and belong to your signed-in account.</p>
+              </div>
+              <button class="button button-quiet compact" id="projects-refresh-btn" type="button">↻ Refresh</button>
+            </div>
+            <form id="project-create-form" class="project-create-form">
+              <label for="project-title">Project name</label>
+              <input id="project-title" name="title" type="text" maxlength="120" placeholder="e.g. Store expansion" required>
+              <label for="project-description">Description <span class="foot-muted">(optional)</span></label>
+              <textarea id="project-description" name="description" rows="3" maxlength="2000" placeholder="What is this project about?"></textarea>
+              <label for="project-status">Status</label>
+              <select id="project-status" name="status">
+                <option value="active">Active</option>
+                <option value="paused">Paused</option>
+                <option value="completed">Completed</option>
+              </select>
+              <button class="button button-primary" id="project-submit-btn" type="submit">＋ Create project</button>
+              <p id="project-form-message" role="status" aria-live="polite"></p>
+            </form>
+            <div id="projects-message" class="transaction-foot" role="status" aria-live="polite">Loading projects…</div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>PROJECT</th><th>DESCRIPTION</th><th>STATUS</th><th>LAST UPDATED</th><th>ACTIONS</th></tr></thead>
+                <tbody id="project-rows"><tr><td colspan="5">Loading projects…</td></tr></tbody>
+              </table>
+            </div>
+            <div class="transaction-foot transaction-note"><span class="foot-dot"></span><span>These records are stored by the backend, not in the browser's demo transaction storage.</span></div>
+          </section>
+        </section>
+
+        <section class="page-view" id="assistant" data-page-view="assistant" hidden>
+          <div class="assistant-layout">
+            <section class="panel assistant-panel">
+              <div class="assistant-heading"><span class="assistant-avatar">✦</span><div><div class="panel-kicker">FLOWSETU PRIVATE ASSISTANT</div><h2>Ask about your cash flow</h2><p>Plain-language answers from this device’s forecast.</p></div><span class="assistant-local-tag"><i></i> LOCAL ONLY</span></div>
+              <div class="assistant-suggestions"><button type="button" data-prompt="What is my biggest cash risk?">What is my biggest cash risk?</button><button type="button" data-prompt="Will I stay above my reserve?">Will I stay above my reserve?</button><button type="button" data-prompt="What changes if my largest customer pays late?">What changes if my largest customer pays late?</button></div>
+              <div class="assistant-messages" id="assistant-messages" aria-live="polite"><div class="assistant-message assistant-response"><span class="message-avatar">✦</span><div><div class="message-author">CaptiDict assistant <small>LOCAL ANALYSIS</small></div><p>Ask about your forecast, reserve, upcoming receipts, or payments. I’ll answer from the data saved in this browser.</p><small class="message-source">No external AI request is made.</small></div></div></div>
+              <form class="assistant-input-row" id="assistant-form"><label class="sr-only" for="assistant-question">Ask a cash-flow question</label><input id="assistant-question" name="question" autocomplete="off" maxlength="180" placeholder="Ask about your cash flow…" required><button class="button button-primary" type="submit">Ask locally <span>↑</span></button></form>
+              <p class="assistant-disclaimer">Prototype assistant uses transparent local rules, not a remote generative AI model. Its answers are estimates, not financial advice.</p>
+            </section>
+            <aside class="panel privacy-details">
+              <div class="panel-kicker">PRIVACY &amp; SAFETY</div><h2>Your numbers stay here.</h2>
+              <p class="privacy-intro">CaptiDict’s demo assistant calculates answers in this browser from the transactions you can see.</p>
+              <div class="privacy-check"><span>✓</span><div><strong>No hosted AI call</strong><small>There is no AI API key, prompt upload, or third-party model request.</small></div></div>
+              <div class="privacy-check"><span>✓</span><div><strong>No analytics or tracking</strong><small>The prototype does not send usage events or transaction data to a server.</small></div></div>
+              <div class="privacy-check"><span>✓</span><div><strong>Local browser storage</strong><small>Your edits stay in local storage on this device. Clear them below when you finish.</small></div></div>
+              <div class="privacy-boundary"><strong>Important boundary</strong><p>This is privacy-conscious demo behavior, not a security certification. Anyone with access to this browser profile may be able to see its saved data.</p></div>
+              <button class="clear-data-button" type="button" id="clear-local-data-btn">Clear saved demo data</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page-view" id="profile" data-page-view="profile" hidden>
+          <section class="profile-settings-grid profile-redesign-grid" aria-label="Profile and settings">
+            <article class="panel profile-settings-card profile-account-card">
+              <div class="profile-card-heading">
+                <span class="profile-heading-icon" aria-hidden="true">♙</span>
+                <div><h2>Account details</h2><p class="profile-settings-intro">View your basic account information.</p></div>
+              </div>
+              <div class="profile-field-group">
+                <label>Full name</label>
+                <div class="profile-readonly-field" id="profile-detail-name">—</div>
+              </div>
+              <div class="profile-field-group">
+                <label>Email address</label>
+                <div class="profile-readonly-field" id="profile-detail-email">—</div>
+              </div>
+              <div class="profile-workspace-row">
+                <span class="profile-workspace-avatar" id="profile-page-avatar">U</span>
+                <div><strong>Workspace</strong><span>Business workspace</span><small class="profile-account-session"><span id="profile-page-name">Signed-in user</span> · <span id="profile-page-email">Loading account email…</span></small></div>
+              </div>
+              <div class="profile-settings-actions">
+                <button class="button button-primary" id="profile-replay-tour" type="button">Replay interactive tutorial <span aria-hidden="true">→</span></button>
+                <button class="button button-quiet" id="profile-logout-btn" type="button">Log out</button>
+              </div>
+            </article>
+
+            <article class="panel profile-settings-card profile-password-card">
+              <div class="profile-card-heading">
+                <span class="profile-heading-icon" aria-hidden="true">♙</span>
+                <div><h2>Change password</h2><p class="profile-settings-intro">Keep your account secure with a strong password.</p></div>
+              </div>
+              <form id="change-password-form" class="profile-password-form">
+                <label for="profile-current-password">Current password</label>
+                <input id="profile-current-password" name="currentPassword" type="password" autocomplete="current-password" minlength="1" maxlength="72" placeholder="Enter your current password" required>
+                <label for="profile-new-password">New password</label>
+                <input id="profile-new-password" name="newPassword" type="password" autocomplete="new-password" minlength="10" maxlength="72" aria-describedby="profile-password-hint" placeholder="Enter your new password" required>
+                <small id="profile-password-hint">Use 10–72 characters. Choose a password you do not use elsewhere.</small>
+                <label for="profile-confirm-password">Confirm new password</label>
+                <input id="profile-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="10" maxlength="72" placeholder="Re-enter your new password" required>
+                <div class="profile-settings-actions"><button class="button button-primary" id="profile-change-password-submit" type="submit">♙ &nbsp; Change password</button></div>
+                <p id="profile-security-message" class="profile-settings-message" role="status" aria-live="polite" hidden></p>
+              </form>
+            </article>
+
+            <article class="panel profile-settings-card profile-help-card profile-help-wide-card">
+              <div class="profile-card-heading profile-help-heading">
+                <span class="profile-heading-icon" aria-hidden="true">✦</span>
+                <div><h2>Help &amp; privacy</h2><p class="profile-settings-intro">Find the walkthrough and review how CaptiDict handles account and workspace information.</p></div>
+              </div>
+              <div class="profile-help-options">
+                <div class="profile-help-option">
+                  <span class="profile-help-option-icon" aria-hidden="true">▤</span>
+                  <div class="profile-help-option-copy"><strong>Interactive walkthrough</strong><span>Learn the key features in a few simple steps.</span></div>
+                  <button class="button button-quiet" type="button" data-page-link="guide">Open user guide <span aria-hidden="true">→</span></button>
+                </div>
+                <div class="profile-help-option">
+                  <span class="profile-help-option-icon" aria-hidden="true">⬡</span>
+                  <div class="profile-help-option-copy"><strong>Privacy details</strong><span>See how we protect your data and privacy.</span></div>
+                  <button class="button button-quiet" type="button" data-page-link="privacy">View details <span aria-hidden="true">→</span></button>
+                </div>
+              </div>
+            </article>
+          </section>
+        </section>
+
+        <section class="page-view" id="privacy" data-page-view="privacy" hidden>
+          <section class="profile-settings-grid">
+            <article class="panel profile-settings-card">
+              <div class="panel-kicker">PRIVACY DETAILS</div>
+              <h2>Your data, clearly explained.</h2>
+              <p class="profile-settings-intro">CaptiDict combines a local cash-flow workspace with authenticated account and transaction APIs. Here is what the current app does.</p>
+              <div class="privacy-detail-item"><span class="privacy-detail-icon">⌑</span><div><strong>Account &amp; transactions</strong><p>Your login is sent to the backend for authentication. Transaction records are loaded from the authenticated transaction API and stored by the backend; they are not only local browser demo data.</p></div></div>
+              <div class="privacy-detail-item"><span class="privacy-detail-icon">▦</span><div><strong>Forecast calculations</strong><p>Cash-flow projections, scenario comparisons, confidence weighting, and the local assistant calculations run in this browser using the data loaded into the workspace.</p></div></div>
+              <div class="privacy-detail-item"><span class="privacy-detail-icon">✦</span><div><strong>Private assistant</strong><p>The assistant uses local rules and does not send your question or financial values to an external AI service.</p></div></div>
+              <div class="privacy-detail-item"><span class="privacy-detail-icon">⇩</span><div><strong>Exports &amp; reminders</strong><p>Exports create a report in your browser. Reminder drafts are not sent automatically. Treat downloaded reports as sensitive financial documents.</p></div></div>
+            </article>
+            <article class="panel profile-settings-card">
+              <div class="panel-kicker">YOUR CONTROLS</div>
+              <h2>Choices and limitations</h2>
+              <div class="privacy-detail-item"><span class="privacy-detail-icon">↗</span><div><strong>Sign out</strong><p>Sign out removes the active session token from this browser session.</p><button class="button button-quiet" id="privacy-logout-btn" type="button">Log out</button></div></div>
+              <div class="privacy-detail-item"><span class="privacy-detail-icon">◎</span><div><strong>Browser storage</strong><p>Some interface preferences and tutorial completion status are saved locally. Clearing browser storage may remove these local settings.</p></div></div>
+              <div class="privacy-detail-item"><span class="privacy-detail-icon">i</span><div><strong>Prototype notice</strong><p>Demo values and forecasts are not guarantees. Before using real business data, confirm backend access controls, database backups, transport security, retention, and deployment settings.</p></div></div>
+              <button class="button button-primary" type="button" data-page-link="guide">Open user guide →</button>
+            </article>
+          </section>
+        </section>
+
+        <section class="page-view" id="guide" data-page-view="guide" hidden>
+          <article class="panel guide-hero">
+            <div><div class="panel-kicker">PROFILE &amp; WORKSPACE MANUAL</div><h2>Know what every number means.</h2><p>This guide covers the demo workspace, each screen, the controls you can use, and the exact rules behind the forecast.</p></div>
+            <div class="guide-profile-chip"><span class="profile-avatar">AS</span><span><strong>Arjun Shah</strong><small>Mitti &amp; Loom · demo workspace</small></span></div>
+          </article>
+          <div style="margin:14px 0"><button class="button button-primary" id="tour-replay" type="button">▶ Replay interactive tutorial</button></div>
+          <nav class="guide-toc" aria-label="Manual sections"><a href="#guide-setup" data-guide-target="guide-setup">Getting started</a><a href="#guide-screens" data-guide-target="guide-screens">Screens &amp; actions</a><a href="#guide-method" data-guide-target="guide-method">How predictions work</a><a href="#guide-privacy" data-guide-target="guide-privacy">Privacy &amp; limits</a></nav>
+          <section class="panel guide-section" id="guide-setup">
+            <div class="panel-kicker">01 · PROFILE &amp; FIRST SETUP</div><h2>Make the demo useful for your example.</h2>
+            <p class="guide-lead">Your profile page shows the name and email returned by the authenticated backend. Use Profile &amp; settings to review your account, replay the tutorial, or sign out. Password changes require a verified backend route.</p>
+            <div class="guide-steps">
+              <article><span>1</span><div><strong>Set current cash</strong><p>Open Overview and choose <b>Edit</b> beside Current cash. Enter the balance available at the start of the forecast.</p></div></article>
+              <article><span>2</span><div><strong>Add upcoming movements</strong><p>Use <b>Add transaction</b> for a receipt or payment. Give it a clear name, amount, expected date, and—only for receipts—a realistic confidence.</p></div></article>
+              <article><span>3</span><div><strong>Review dates and assumptions</strong><p>Open Transactions to check each forecast item. The demo covers 24 Oct–23 Nov 2026; dates outside that 30-day window are not plotted.</p></div></article>
+              <article><span>4</span><div><strong>Try a scenario, then reset if needed</strong><p>Use Forecast controls to see what could change. <b>Next 30 days</b> restores the original fictional sample workspace.</p></div></article>
+            </div>
+            <div class="guide-note"><strong>Suggested demo order</strong><span>Overview → Forecast → enter a customer delay and sales-drop sentence → preview and apply it → compare the supplier move → Transactions → mark a completed item and try Undo.</span></div>
+          </section>
+          <section class="guide-section" id="guide-screens">
+            <div class="panel-kicker">02 · SCREENS &amp; ACTIONS</div><h2>What each part of CaptiDict does</h2>
+            <div class="guide-feature-grid">
+              <article class="panel guide-feature"><span class="guide-feature-icon">▦</span><div class="panel-kicker">OVERVIEW</div><h3>Your current position</h3><p>Current cash is the opening balance. Available cash is projected day-30 cash. Net cash is the projected change. Runway is the first day the balance goes below zero—or 30+ days if it does not. Alerts and Cash Health compare the lowest balance with the ₹1,50,000 reserve.</p><p>The cash bridge explains opening cash, confidence-weighted receipts and full scheduled payments. The scenario tabs compare the base case, a late-customer stress case, and that stress case with a supplier extension.</p></article>
+              <article class="panel guide-feature"><span class="guide-feature-icon">⌁</span><div class="panel-kicker">FORECAST</div><h3>See the path and test changes</h3><p>The chart shows the expected balance, an active what-if line, and the reserve. The warning calls out the lowest point and its date. The action planner suggests three locally calculated next steps; checking them off saves that progress on this device.</p><p>Controls can delay the largest pending receipt by 0–14 days, add a ₹0–₹2,50,000 one-off cost on a selected date, or reduce pending sales inflows by 0–80%. Compare this move shifts the sample supplier payment by 14 days.</p><p>For a natural-language scenario, try “Aster pays 20 days late and sales drop 10%”. Preview and confirm the assumptions before applying them. The local parser needs a customer name that appears in a pending receipt; it makes no AI/API request. It accepts receipt delays up to 90 days, sales reductions up to 100%, and unexpected expenses up to ₹1 crore.</p><p>The Forecast backtest panel reads a CSV containing historical forecast date, target date, predicted low/high, and actual cash. Use YYYY-MM-DD dates and plain signed INR numbers without thousands separators. It calculates in-band coverage and median band width locally. At least 20 observations must cover the six-month window, including a recent snapshot, before the result is labeled ready. This prototype currently plots an expected line only; it does not generate or retain historical prediction bands, and no sample accuracy is presented as real.</p></article>
+              <article class="panel guide-feature"><span class="guide-feature-icon">⇄</span><div class="panel-kicker">TRANSACTIONS</div><h3>Maintain the inputs</h3><p>Use <b>All transactions</b> to add an inflow or outflow, review its date and amount, and mark it Received or Paid only after it has happened. Undo returns it to Forecast and reverses the balance adjustment.</p><p>Open <b>Receivables</b> for the Smart Chase List. It ranks pending customer receipts using amount, your confidence input, and the expected date. Select a receipt, choose Friendly, Firm, or Final reminder, edit the local template, and copy it yourself. The draft does not assert a contractual due date or send a message; projected sales are excluded.</p><p>CSV import previews rows locally, flags invalid or duplicate entries, and adds only valid forecast rows. Export downloads the current daily forecast and transaction list as CSV. Nothing is uploaded.</p></article>
+              <article class="panel guide-feature"><span class="guide-feature-icon">₹</span><div class="panel-kicker">PAY-ORDER PLANNER</div><h3>Prioritize bills when cash is tight</h3><p>On Forecast, enter your estimated cost of a one-week delay for each payment and tick Can discuss date only after checking its terms. The planner ranks higher cost per ₹1,000 earlier for payment. When the modeled low is below reserve, it tests eligible bills from the lowest delay cost upward using a 14-day shift.</p><p>Apply comparison changes the forecast scenario only; it does not change transaction dates or authorize late payment. Demo estimates are fictional. Confirm penalties, agreements, payroll and statutory deadlines before acting.</p></article>
+              <article class="panel guide-feature"><span class="guide-feature-icon">₹</span><div class="panel-kicker">FUNDING READINESS</div><h3>Estimate a reserve buffer</h3><p>At the end of Forecast, the funding brief estimates the extra cash needed to keep the lowest modeled balance at or above your reserve in 95% of 500 repeatable paths. Receipts are sampled as arriving in full according to their confidence; scheduled payments count in full. The brief reflects the currently selected scenario and includes the pending inputs, expected low, P05 low, and any backtest data currently loaded.</p><p>Choose <b>Export PDF brief</b> to open a local report, then use the browser’s Print dialog and select Save as PDF. It makes no bank or eligibility claim. Replace demo entries with verified records and review the assumptions with a CA or lender.</p></article>
+              <article class="panel guide-feature"><span class="guide-feature-icon">✦</span><div class="panel-kicker">PRIVATE AI</div><h3>Ask for a local explanation</h3><p>Try questions about cash risk, the reserve, a late receipt, or the forecast. The demo responds using fixed local rules and the current transactions. It does not call a hosted AI model, so it is not a general-purpose chatbot.</p><p>The chat is not saved. Use Clear saved demo data to restore the sample data and clear local workspace changes.</p></article>
+            </div>
+          </section>
+          <section class="panel guide-section" id="guide-method">
+            <div class="panel-kicker">03 · HOW FLOWSETU PREDICTS</div><h2>A transparent, date-based estimate</h2>
+            <p class="guide-lead">There is no hidden prediction model or bank feed. The chart is calculated from the cash balance, dated transactions, and scenario controls currently saved in this browser.</p>
+            <div class="guide-formula">Projected closing cash = opening cash + expected receipts − scheduled payments</div>
+            <div class="guide-method-grid">
+              <article><span>01</span><div><strong>Start from current cash</strong><p>The value set in Overview is the opening balance for the first forecast day.</p></div></article>
+              <article><span>02</span><div><strong>Weight expected receipts</strong><p>For the standard forecast, each pending inflow contributes <b>amount × confidence</b>. For example, ₹1,00,000 at 80% contributes ₹80,000 to the expected line.</p></div></article>
+              <article><span>03</span><div><strong>Count scheduled payments in full</strong><p>Every pending outflow reduces cash by its full amount. Its confidence is not used.</p></div></article>
+              <article><span>04</span><div><strong>Apply movements on their dates</strong><p>CaptiDict builds 31 daily points across the 30-day view. Transactions on the same date are netted together because this prototype has no intraday timing.</p></div></article>
+              <article><span>05</span><div><strong>Find the low and compare the reserve</strong><p>The lowest daily balance determines the warning. Below ₹0 is a possible shortfall; below ₹1,50,000 is a reserve breach; up to ₹60,000 above reserve is a watch-out.</p></div></article>
+              <article><span>06</span><div><strong>Recalculate what-if cases</strong><p>Scenario changes adjust dates or amounts, then rerun the same date-based calculation. The chart, ending cash, lowest point, and alerts update from those assumptions.</p></div></article>
+            </div>
+            <div class="guide-safe-spend"><span class="guide-safe-icon">₹</span><div><strong>What “Safe to spend” means here</strong><p>The app runs 500 repeatable sample paths. Each pending receipt arrives in a path according to its entered confidence; outflows are included in full. It takes the fifth-percentile (lower 5%) of each path’s lowest balance, subtracts the ₹1,50,000 reserve, then rounds down to the nearest ₹500 (never below zero). This is a conservative model estimate over the displayed 30-day horizon—not a guarantee that spending is safe.</p></div></div>
+            <div class="guide-safe-spend"><span class="guide-safe-icon">P95</span><div><strong>How the funding buffer is estimated</strong><p>The report uses the same 500 local paths. It takes the lower 5th-percentile of each path’s lowest balance, subtracts that from the reserve, and rounds the shortfall up to ₹500. The displayed path count shows how many simulations remain above reserve after adding that estimate. This is scenario math based on the entered confidence assumptions—not a guarantee of real-world 95% safety or a credit-line recommendation.</p></div></div>
+            <p class="guide-caveat">Confidence is your input, not a learned probability. The model assumes receipt outcomes are independent, uses fixed sample dates and a fixed reserve, and does not predict from history.</p>
+          </section>
+          <section class="panel guide-section" id="guide-privacy">
+            <div class="panel-kicker">04 · PRIVACY, RESET &amp; LIMITS</div><h2>Know where the demo stops</h2>
+            <div class="guide-limits-grid">
+              <div><strong>Local by design</strong><p>Transactions, settings, and checklist progress are saved in this browser’s local storage. The demo makes no bank connection and sends no data to an AI service or analytics endpoint.</p></div>
+              <div><strong>Not encrypted or authenticated</strong><p>The login is only a local demo gate. Browser local storage is not encrypted; anyone using the same browser profile may be able to inspect saved data. Use fictional data only.</p></div>
+              <div><strong>Planning aid, not advice</strong><p>Forecasts are estimates, not guarantees or accounting records. Confirm amounts, receipt dates, and payment obligations before acting. This prototype does not provide tax, lending, investment, or legal advice.</p></div>
+              <div><strong>Restore or clear</strong><p>Next 30 days restores the fictional sample. Clear saved demo data in Private AI also restores the sample and removes saved workspace edits from local storage.</p></div>
+            </div>
+          </section>
+        </section>
+
+        <footer class="footer"><span>CaptiDict · Cash-flow clarity for small businesses</span><span>Fictional demo workspace <span class="footer-heart">✦</span></span></footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="transaction-dialog" class="transaction-dialog">
+    <form method="dialog" id="transaction-form">
+      <div class="dialog-top"><div><span class="panel-kicker">CASH FLOW INPUTS</span><h2>Add a transaction</h2></div><button class="icon-button close-dialog" type="button" aria-label="Close">×</button></div>
+      <p class="dialog-description">Add a forecast item to see it in your 30-day outlook.</p>
+      <div class="form-grid"><label class="full-field">Description<input name="title" required maxlength="48" placeholder="e.g. Customer invoice"></label><label>Type<select name="type"><option value="inflow">Money coming in</option><option value="outflow">Money going out</option></select></label><label>Amount (₹)<input name="amount" type="number" min="1" max="100000000" required placeholder="50000"></label><label>Expected date<input name="date" type="date" min="2026-10-24" max="2026-11-23" required value="2026-10-29"></label><label class="full-field">Company / counterparty<input name="companyName" required maxlength="120" placeholder="e.g. Aster Retail"></label><label class="confidence-field">Your assessment (optional)<select name="userConfidence"><option value="" selected>No assessment</option><option value="1">Very confident</option><option value="0.75">Likely</option><option value="0.5">Unsure</option><option value="0.25">Low confidence</option></select></label><p class="full-field" style="font-size:12px;color:#557060;margin:0">Confidence is calculated by the backend from company feedback and bill history. With limited history, the score uses a neutral prior; it is not a verified probability.</p></div>
+      <div class="dialog-actions"><button class="button button-quiet close-dialog" type="button">Cancel</button><button class="button button-primary" id="save-transaction-btn" value="save">Add to forecast</button></div>
+    </form>
+  </dialog>
+  <dialog id="cash-dialog" class="transaction-dialog">
+    <form method="dialog" id="cash-form"><div class="dialog-top"><div><span class="panel-kicker">WORKSPACE SETTINGS</span><h2>Update available cash</h2></div><button class="icon-button close-dialog" value="cancel" aria-label="Close">×</button></div><p class="dialog-description">Enter the cash currently available. The forecast will recalculate from this balance.</p><label class="cash-input-label">Available cash (₹)<input name="openingCash" type="number" min="0" max="1000000000" required></label><div class="dialog-actions"><button class="button button-quiet close-dialog" value="cancel">Cancel</button><button class="button button-primary" value="save">Save balance</button></div></form>
+  </dialog>
+  <dialog id="import-dialog" class="transaction-dialog import-dialog">
+    <form method="dialog" id="import-form">
+      <div class="dialog-top"><div><span class="panel-kicker">LOCAL CSV IMPORT</span><h2>Review before adding</h2></div><button class="icon-button close-dialog" value="cancel" aria-label="Close">×</button></div>
+      <p class="dialog-description">Choose a CSV file. It is read in this browser only; nothing is uploaded. Rows are checked for required fields and duplicates before import.</p>
+      <div class="import-controls"><label class="file-picker-label" for="import-file">Choose CSV file</label><input id="import-file" type="file" accept=".csv,text/csv"><button class="text-link import-template" id="download-template-btn" type="button">Download CSV template</button></div>
+      <div class="import-summary" id="import-summary" aria-live="polite">Choose a CSV file to preview rows.</div>
+      <div class="import-preview-wrap"><table class="import-preview-table"><thead><tr><th>DESCRIPTION</th><th>TYPE</th><th>DATE</th><th>AMOUNT</th><th>RESULT</th></tr></thead><tbody id="import-preview-rows"><tr><td colspan="5">No file selected.</td></tr></tbody></table></div>
+      <div class="dialog-actions"><button class="button button-quiet close-dialog" value="cancel">Cancel</button><button class="button button-primary" id="import-commit-btn" type="button" disabled>Add valid rows</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<section id="captidict-tour" role="dialog" aria-modal="false" aria-labelledby="tour-title" aria-describedby="tour-copy" hidden><div class="tour-eyebrow" id="tour-count">STEP 1 OF 10</div><h2 id="tour-title">Welcome to CaptiDict</h2><p id="tour-copy"></p><div class="tour-actions"><button id="tour-skip" type="button">Skip tour</button><button id="tour-prev" type="button">← Previous</button><button id="tour-next" type="button">Next →</button></div></section>
+  <script src="app.js"></script>
+</body>
+</html>
