@@ -198,6 +198,32 @@ function getAccountStorageKey() {
     return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
   }
 
+  // Display the browser's current system date, refreshing automatically each minute.
+  function updateCurrentSystemDate() {
+    var now = new Date();
+    var headingDate = byId("current-system-date");
+    var cashAsOfDate = byId("cash-as-of-date");
+
+    if (headingDate) {
+      headingDate.textContent = new Intl.DateTimeFormat("en-IN", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      }).format(now).toUpperCase();
+    }
+
+    if (cashAsOfDate) {
+      cashAsOfDate.textContent = new Intl.DateTimeFormat("en-IN", {
+        day: "numeric",
+        month: "short"
+      }).format(now);
+    }
+  }
+
+  updateCurrentSystemDate();
+  setInterval(updateCurrentSystemDate, 60 * 1000);
+
   function fromISO(value) {
     var parts = value.split("-").map(Number);
     return new Date(parts[0], parts[1] - 1, parts[2]);
@@ -991,7 +1017,8 @@ function getAccountStorageKey() {
     renderActionPlan(low);
     var saved = saveState();
     var savedLabel = document.querySelector(".eyebrow");
-    if (savedLabel) savedLabel.innerHTML = '<span class="live-dot"></span> SATURDAY, 24 OCTOBER 2026 <span class="heading-separator">·</span> ' + (saved ? "SAVED ON THIS DEVICE" : "LOCAL STORAGE UNAVAILABLE");
+    if (savedLabel) savedLabel.innerHTML = '<span class="live-dot"></span> <span id="current-system-date"></span> <span class="heading-separator">·</span> ' + (saved ? "SAVED ON THIS DEVICE" : "LOCAL STORAGE UNAVAILABLE");
+    updateCurrentSystemDate();
   }
 
   function showToast(message) {

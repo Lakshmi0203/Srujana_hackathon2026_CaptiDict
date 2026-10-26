@@ -361,13 +361,13 @@
 
       <div class="page-wrap">
         <section class="page-heading">
-          <div><p class="eyebrow"><span class="live-dot"></span> SATURDAY, 24 OCTOBER 2026 <span class="heading-separator">·</span> SAVED ON THIS DEVICE</p><h1 id="page-heading-title">Your cash, <em>in view.</em></h1><p class="intro" id="page-intro">See what is coming in, what is going out, and where to act before a tight week arrives.</p></div>
+          <div><p class="eyebrow"><span class="live-dot"></span> <span id="current-system-date"></span> <span class="heading-separator">·</span> SAVED ON THIS DEVICE</p><h1 id="page-heading-title">Your cash, <em>in view.</em></h1><p class="intro" id="page-intro">See what is coming in, what is going out, and where to act before a tight week arrives.</p></div>
           <button class="period-select" id="reset-btn" type="button"><span class="period-icon">◷</span> Next 30 days <span class="down-caret">⌄</span></button>
         </section>
 
         <section class="page-view active" id="overview" data-page-view="overview">
           <section class="metric-grid" aria-label="Cash-flow summary">
-            <article class="metric-card cash-card"><div class="metric-top"><span>CURRENT CASH</span><span class="metric-icon icon-green">₹</span></div><div class="metric-value" id="metric-cash">₹5,00,000</div><div class="metric-foot"><span class="status-dot green-dot"></span> As of 24 Oct <button class="inline-edit" id="edit-cash-btn" type="button">Edit</button></div></article>
+            <article class="metric-card cash-card"><div class="metric-top"><span>CURRENT CASH</span><span class="metric-icon icon-green">₹</span></div><div class="metric-value" id="metric-cash">₹5,00,000</div><div class="metric-foot"><span class="status-dot green-dot"></span> As of <span id="cash-as-of-date"></span> <button class="inline-edit" id="edit-cash-btn" type="button">Edit</button></div></article>
             <article class="metric-card metric-available"><div class="metric-top"><span>AVAILABLE CASH · 30D</span><span class="metric-icon icon-blue">↗</span></div><div class="metric-value" id="metric-endcash">₹4,64,250</div><div class="metric-foot"><span class="foot-muted">After expected movements</span></div></article>
             <article class="metric-card metric-net"><div class="metric-top"><span>NET CASH · 30D</span><span class="metric-icon icon-orange">⇄</span></div><div class="metric-value" id="metric-net">−₹35,750</div><div class="metric-foot"><span class="foot-muted">Expected in minus committed out</span></div></article>
             <article class="metric-card metric-runway"><div class="metric-top"><span>CASH RUNWAY</span><span class="metric-icon icon-blue">◷</span></div><div class="metric-value" id="metric-runway">30+ days</div><div class="metric-foot"><span class="foot-muted" id="metric-runway-note">No shortfall in this view</span></div></article>
